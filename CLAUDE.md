@@ -6,7 +6,7 @@
 
 - **プロジェクト名**: task-board
 - **内容**: タスク管理ボードアプリ
-- **技術スタック**: HTML / CSS / JavaScript（フレームワーク・ビルドツールなし）
+- **技術スタック**: React 19 / Vite 8 / JavaScript（JSX）/ CSS
 
 ## GitHubリポジトリ
 
@@ -33,45 +33,59 @@ https://github.com/mizuho093067/task-board
 - プッシュに失敗した場合は、エラー内容を報告し、強制プッシュ（`--force`）は行わないこと。
 - 不要なファイル（テスト用の一時ファイルなど）はコミットしない。
 
-## ファイル構成（予定）
+## ファイル構成
 
 ```
 task-board/
-├── CLAUDE.md       # このファイル
-├── index.html      # メイン画面（ボード表示）
-├── style.css       # スタイル
-└── script.js       # タスクデータとボードのロジック
+├── CLAUDE.md               # このファイル
+├── index.html              # エントリーポイントの HTML
+├── package.json            # 依存パッケージとスクリプト
+├── vite.config.js          # Vite の設定
+└── src/
+    ├── main.jsx            # React の起動処理
+    ├── App.jsx             # タスクの状態管理（追加・切り替え・削除）
+    ├── App.css             # スタイル
+    └── components/
+        ├── TaskForm.jsx    # タスク入力フォーム
+        └── TaskItem.jsx    # タスク1件分の表示
 ```
 
 ## 開発・実行方法
 
-- ビルド不要。`index.html` をブラウザで直接開けば動作する。
-- 外部ライブラリは原則使わず、素の JavaScript（Vanilla JS）で実装する。
+- 初回のみ `npm install` で依存パッケージをインストールする。
+- `npm run dev` で開発サーバーを起動し、表示された URL（通常 http://localhost:5173）をブラウザで開く。
+- `npm run build` で本番用ファイルを `dist/` に出力する。
+- `node_modules/` と `dist/` はコミットしない（`.gitignore` で除外済み）。
+- コードを変更したら、プッシュ前に `npm run build` が通ることを確認する。
 
 ## コーディング規約
 
+- コンポーネントは関数コンポーネントと Hooks（`useState` など）で書く。
+- コンポーネントは `src/components/` に1ファイル1コンポーネントで置き、ファイル名はパスカルケース（例: `TaskItem.jsx`）。
 - JavaScript は `const` / `let` を使用し、`var` は使わない。
-- 変数名・関数名はキャメルケース（例: `taskList`, `renderBoard()`）。
-- タスクデータは表示ロジックと分離し、配列オブジェクトで管理する。
+- 変数名・関数名はキャメルケース（例: `toggleTask`, `doneCount`）。
+- state は直接書き換えず、新しい配列・オブジェクトを作って更新する。
 
 ```js
 // タスクデータの例
 const tasks = [
   {
-    id: 1,
+    id: "…",            // crypto.randomUUID() で生成
     title: "買い物に行く",
-    status: "todo" // "todo" | "doing" | "done"
+    done: false         // 完了済みなら true
   }
 ];
 ```
 
-## 主な機能（予定）
+## 主な機能
 
-- タスクの追加・編集・削除
-- 「未着手」「進行中」「完了」の列でタスクを管理
-- タスクの列間移動
-- ブラウザの localStorage にタスクを保存し、再読み込み後も保持
+- テキスト入力でタスクを追加する（空文字は追加しない）
+- チェックボックスで完了・未完了を切り替える
+- タスクを削除する
+- 完了済みのタスクはグレー（取り消し線付き）で表示する
+- 完了件数 / 全件数を表示する
 
 ## 注意事項
 
 - スマートフォンでも見やすいレスポンシブデザインにする。
+- タスクは現在メモリ上のみで保持しており、ページを再読み込みすると消える。
