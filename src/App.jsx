@@ -1,10 +1,32 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskForm from "./components/TaskForm.jsx";
 import TaskItem from "./components/TaskItem.jsx";
 
+// ローカルストレージの保存キー
+const STORAGE_KEY = "task-board.tasks";
+
+// 保存済みのタスクを読み込む（読めない・壊れている場合は空にする）
+const loadTasks = () => {
+  try {
+    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    return Array.isArray(saved) ? saved : [];
+  } catch {
+    return [];
+  }
+};
+
 function App() {
   // タスク一覧（id・タイトル・完了状態を持つ）
-  const [tasks, setTasks] = useState([]);
+  const [tasks, setTasks] = useState(loadTasks);
+
+  // タスクが変わるたびにローカルストレージへ保存する
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+    } catch {
+      // 保存できない環境（プライベートモードなど）では何もしない
+    }
+  }, [tasks]);
 
   // タスクを追加する
   const addTask = (title) => {
