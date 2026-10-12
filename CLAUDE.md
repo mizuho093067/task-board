@@ -40,7 +40,9 @@ task-board/
 ├── CLAUDE.md               # このファイル
 ├── index.html              # エントリーポイントの HTML
 ├── package.json            # 依存パッケージとスクリプト
-├── vite.config.js          # Vite の設定
+├── vite.config.js          # Vite の設定（本番のベースパス /task-board/）
+├── .github/workflows/
+│   └── deploy.yml          # GitHub Pages への自動デプロイ
 └── src/
     ├── main.jsx            # React の起動処理
     ├── App.jsx             # タスクの状態管理（追加・切り替え・削除・保存）
@@ -57,6 +59,13 @@ task-board/
 - `npm run build` で本番用ファイルを `dist/` に出力する。
 - `node_modules/` と `dist/` はコミットしない（`.gitignore` で除外済み）。
 - コードを変更したら、プッシュ前に `npm run build` が通ることを確認する。
+
+## 公開（GitHub Pages）
+
+- 公開URL: https://mizuho093067.github.io/task-board/
+- `main` にプッシュすると、GitHub Actions（`.github/workflows/deploy.yml`）が自動でビルドして公開する。
+- 本番ビルドは `/task-board/` 配下で動く前提（`vite.config.js` の `base`）。リポジトリ名を変えた場合はここも変更する。
+- 公開と同じ状態の確認は `npm run build` → `npm run preview` → http://localhost:4173/task-board/ で行う。
 
 ## コーディング規約
 
