@@ -6,11 +6,29 @@
 
 - **プロジェクト名**: task-board
 - **内容**: タスク管理ボードアプリ
-- **技術スタック**: React 19 / Vite 8 / JavaScript（JSX）/ CSS
+- **技術スタック**: React 19 / Vite 8 / JavaScript（JSX）/ CSS（詳細は「技術スタック」の項を参照）
 
 ## GitHubリポジトリ
 
 https://github.com/mizuho093067/task-board
+
+## デプロイ先
+
+https://mizuho093067.github.io/task-board/
+
+## 技術スタック
+
+| 分類 | 使用技術 | 補足 |
+| --- | --- | --- |
+| UI ライブラリ | React 19（`react` / `react-dom`） | 関数コンポーネント + Hooks |
+| ビルドツール | Vite 8 + `@vitejs/plugin-react` | 開発サーバーと本番ビルド |
+| 言語 | JavaScript（JSX） | TypeScript は使っていない |
+| スタイル | 素の CSS（`src/App.css`） | CSS フレームワーク・CSS-in-JS は使っていない |
+| データ保存 | ブラウザの localStorage | サーバー・データベースはなし |
+| ホスティング | GitHub Pages | GitHub Actions で自動デプロイ |
+| 実行環境 | Node.js 24 | ローカル開発・GitHub Actions 共通 |
+
+- 外部ライブラリは必要になるまで追加しない。追加する場合は理由をユーザーに説明してから入れる。
 
 ## コミュニケーション
 
@@ -62,7 +80,7 @@ task-board/
 
 ## 公開（GitHub Pages）
 
-- 公開URL: https://mizuho093067.github.io/task-board/
+- 公開先は「デプロイ先」の URL。
 - `main` にプッシュすると、GitHub Actions（`.github/workflows/deploy.yml`）が自動でビルドして公開する。
 - 本番ビルドは `/task-board/` 配下で動く前提（`vite.config.js` の `base`）。リポジトリ名を変えた場合はここも変更する。
 - 公開と同じ状態の確認は `npm run build` → `npm run preview` → http://localhost:4173/task-board/ で行う。
@@ -70,7 +88,7 @@ task-board/
 ## コーディング規約
 
 - コンポーネントは関数コンポーネントと Hooks（`useState` など）で書く。
-- コンポーネントは `src/components/` に1ファイル1コンポーネントで置き、ファイル名はパスカルケース（例: `TaskItem.jsx`）。
+- コンポーネントは `src/components/` に1ファイル1コンポーネントで置く（ルートの `App.jsx` のみ `src/` 直下）。
 - JavaScript は `const` / `let` を使用し、`var` は使わない。
 - 変数名・関数名はキャメルケース（例: `toggleTask`, `doneCount`）。
 - state は直接書き換えず、新しい配列・オブジェクトを作って更新する。
@@ -85,6 +103,23 @@ const tasks = [
   }
 ];
 ```
+
+### コンポーネントの命名規約
+
+| 対象 | ルール | 例 |
+| --- | --- | --- |
+| コンポーネント名 | パスカルケース。タスク関連は `Task` + 役割 | `TaskForm`, `TaskItem` |
+| ファイル名 | コンポーネント名と同じ + `.jsx` | `TaskItem.jsx` |
+| export | `function` で定義し、ファイル末尾で `export default` | `export default TaskItem;` |
+| イベント用の props | `on` + 動詞 | `onAdd`, `onToggle`, `onDelete` |
+| コンポーネント内のイベント処理 | `handle` + イベント名 | `handleSubmit` |
+| state を更新する関数 | 動詞 + 対象（`App.jsx` に置き、props で渡す） | `addTask`, `toggleTask`, `deleteTask` |
+| データを渡す props | 単数形の名詞 | `task` |
+| CSS クラス名 | ケバブケース。コンポーネントに対応する名前にする | `task-form`, `task-item`, `delete-button` |
+| 状態を表すクラス | 基本クラスに追加する形容詞 | `task-item done` |
+
+- 新しいコンポーネントを作るときは、上の規約に合わせて既存の `TaskForm` / `TaskItem` と同じ書き方にする。
+- state はできるだけ `App.jsx` にまとめ、子コンポーネントは props で受け取って表示とイベント通知に専念する。
 
 ## 主な機能
 
